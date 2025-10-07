@@ -1,0 +1,22 @@
+{%extends 'base.html'%}
+    {% block title %}Todo Tasks {%endblock%}
+{%block body%}
+    <form method="post" action="">
+        {% csrf_token %}
+        {% for quest in quests %}
+        <label>
+            {%if quest.dead_line >= today or quest.dead_line == today%}
+                <b>{{quest.title}}</b><br/>
+                {{quest.description}}<br/>
+                {{quest.dead_line}}<br/><br/>
+                <textarea name="comment_{{quest.id}}"rows="4" cols="45" maxlength="100"></textarea><br/>
+                <input type="checkbox", name="quests", value="{{ quest.id }}"><br/>
+            {%else%}
+                <p>Brak zadań na dzisiaj</p>
+            {%endif%}
+        </label>
+        
+        {%endfor%}
+        <button type="submit">Send</button>
+    </form>
+{%endblock%}

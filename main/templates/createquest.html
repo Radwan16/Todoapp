@@ -1,0 +1,19 @@
+{%extends 'base.html'%}
+{%block title%}Create Quest{%endblock%}
+{%block body%}
+<form method="post" action="">
+    {%csrf_token%}
+    <b>Title</b><br/>
+    <input type="text" name="title"><br/><br/>
+    <b>Description</b><br/>
+    <textarea name="description" rows="4" cols="45" maxlength="255"></textarea><br/>
+    <input type="date" name="dead_line"><br/>
+    <select name="assigned_to">
+            {% for uid in usersid %}
+                 <option value="{{ uid.id }}">{{ uid.username }}</option>
+            {%endfor%}
+    </select><br/>
+    <button type="submit">Create</button>
+</form>
+
+{%endblock%}

@@ -1,0 +1,18 @@
+{%extends 'base.html'%}
+{%block title%} Not Completed {%endblock%}
+{%block body%}
+
+    <form method="post" action="">
+        {%csrf_token%}
+        {%for quest in quests%}
+            <label>
+                <b>{{quest.title}}</b></br>
+                {{quest.description}}</br>
+                {{quest.dead_line}}</br></br>
+                <textarea name="comment_{{quest.id}}" rows="4"cols="45"maxlength="100"></textarea></br>
+                <input type="checkbox" name="quests" value="{{quest.id}}"></br>
+            </label>
+            <button type="submit">Send</button>
+        {%endfor%}
+    </form> 
+{%endblock%}

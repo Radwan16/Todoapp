@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Quest</title>
+</head>
+<body>
+        <form method="get" action="">
+        {%csrf_token%}
+        <input type="date" name="date" value="selected_dates"></br/>
+        <button type="submit">Szukaj</button>
+        </form>
+    {% for cal in cal_quests %}
+        {{cal.title}}<br/>
+        {{cal.dead_line}}<br/>
+        {{cal.description}}<br/><br/>
+    {%empty%}
+        <b>Brak zadań !</b>
+    {%endfor%}
+    </form>
+</body>
+</html>

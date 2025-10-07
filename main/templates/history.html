@@ -1,0 +1,23 @@
+{%extends 'base.html'%}
+{%block title%} History {%endblock%}
+{%block body%}
+<form method="post" action="">
+   {%csrf_token%}
+{%for quest in quests%}
+   <b><br/>{{quest.title}}<br/></b>
+   {{quest.description}}<br/>
+   {{quest.assigned_to}}<br/>
+   {{quest.update}}<br/>
+   {{quest.dead_line}}<br/>
+   {{quest.made}}<br/>
+   {%if quest.comment != None%}
+      {{quest.comment}}<br/>
+   {%endif%}
+   {%if quest.made == True%}
+   <input type="checkbox" name="quests" value="{{quest.id}}">
+   {%endif%}
+   {%endfor%}
+</br><button type="submit">Restore</button>
+</form>
+
+{%endblock%}

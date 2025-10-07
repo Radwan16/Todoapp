@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%} {% endblock %}</title>
+</head>
+<body>
+    <table cellspacing="0" cellpadding="0" border="1" style="width: 100%; text-align: center;">
+    <tr>
+    <td>
+    <a href="{%url 'home'%}">Home</a>
+    </td>
+    {%if user.is_superuser%}
+
+        <td><a href="{%url 'listuserquest'%}">Tasks list</a></td>
+        <td><a href="{%url 'createuser'%}">Create user</a></td>
+        <td><a href="{%url 'createquest'%}">Create quest</a></td>
+        <td><a href="{%url 'history'%}">History</a></td>
+        <td><a href="{%url 'calendar'%}">Calendar</a></td>
+        <td><a href="{%url 'not_completed'%}">Not completed</a></td>
+    {% elif user != user.is_superuser %}
+        <td><a href="{%url 'listuserquest'%}">Tasks list</a></td>
+        <td><a href="{%url 'calendar'%}">Calendar</a></td>
+        <td><a href="{%url 'not_completed'%}">Not completed</a></td>
+    {%endif%}
+    <td style="width: 100px ;">
+    <form method="post" action="{% url 'logout' %}">
+        {%csrf_token%}
+        <button type="submit">Logout</button>
+    </form>
+    </td>
+    </tr>
+    </table>
+    {% block body%} {%endblock%}
+</body>
+</html>
