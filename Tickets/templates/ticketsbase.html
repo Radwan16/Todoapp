@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+{% endblock %}
+{% block body %}
+    <table>
+        <tr style="width: 100%;">
+            <td>
+                <a href="{% url 'createtickets' %}" class="nav-link px-2 text-secondary" style="text-align: center;">Create</a>
+            </td>
+            <td>
+                <a href="{% url 'ticketsdb' %}" class="nav-link px-2 text-secondary" style="text-align: center;">Base</a>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

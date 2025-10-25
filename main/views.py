@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout 
 from django.contrib import messages
 from datetime import date
+from Tickets.models import Ticket
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
@@ -59,34 +60,36 @@ def logout_view(request):
 def listuserquest(request):   
     if request.method == 'POST':
         quest_ids = request.POST.getlist('quests')
+        ticket_ids = request.POST.getlist('tickets')
+
         for quest_id in quest_ids:
-            comment = request.POST.get(f'comment_{quest_id}','')
-            Quest.objects.filter(id__in=quest_ids).update(made=True, comment=comment)
+            if quest_id:
+                comment = request.POST.get(f'comment_{quest_id}','')
+                Quest.objects.filter(id__in=quest_ids).update(made=True, comment=comment)
+
+        for ticket_id in ticket_ids:
+            if ticket_id:
+                Ticket.objects.filter(id__in=ticket_ids).update(made=True)
+
         return redirect('listuserquest')
-    
+    tickets = Ticket.objects.filter(made=False, assigned_to=request.user)
     quests = Quest.objects.filter(made=False, assigned_to=request.user) 
-    return render(request, 'tasklist.html', {'quests':quests, 'today':date.today()})
+    return render(request, 'tasklist.html', {'quests':quests, 'tickets':tickets,'today':date.today()})
 
 def createuser(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         is_superuser = bool(request.POST.get('is_superuser'))
-
-        users = User.objects.create_user(
+        new_user = User.objects.create_user(
                 username=username,
                 password=password,
                 is_superuser = is_superuser
             )
-        
-        dep=Department.objects.prefetch_related("users").get(users=request.user)
-        dep.users.add(users)
         return redirect('createuser')
+    # dep = Department.objects.prefetch_related("users").get(users=request.user)
+    # dep.users.add(new_user)
     return render(request,'createnewuser.html')
-
-
-from django.shortcuts import render, redirect
-from .models import Quest, Department
 
 def createquest(request):
     if request.method == 'POST':
@@ -94,7 +97,7 @@ def createquest(request):
         description = request.POST.get('description')
         dead_line = request.POST.get('dead_line')
         assigned_to_id = request.POST.get('assigned_to')
-        u = Department.objects.prefetch_related("users").get(users=request.user)
+        # u = Department.objects.prefetch_related("users").get(users=request.user)
         Quest.objects.create(
             title=title,
             description=description,
@@ -127,13 +130,6 @@ def history(request):
     dep=Department.objects.select_related().get(users=request.user)
     quests=Quest.objects.filter(departament=dep)
     return render(request, 'history.html',{'quests':quests})
-
-def calendar(request):
-    selected_date= request.GET.get("date")
-    cal_quest=[]
-    if selected_date:
-        cal_quest=Quest.objects.select_related().filter(dead_line=selected_date, assigned_to=request.user, made=False)
-    return render(request, 'calendarquest.html',{'cal_quests':cal_quest})
 
 def home(request):
     departament_name = Department.objects.select_related().get(users=request.user)

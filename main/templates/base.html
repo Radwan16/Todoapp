@@ -3,35 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>{% block title%} {% endblock %}</title>
 </head>
 <body>
-    <table cellspacing="0" cellpadding="0" border="1" style="width: 100%; text-align: center;">
-    <tr>
-    <td>
-    <a href="{%url 'home'%}">Home</a>
-    </td>
-    {%if user.is_superuser%}
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          <svg class="bi me-2" width="100%" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            {% if user.is_authenticated %}
+    <li>
+        <a href="{% url 'home' %}" class="nav-link px-2 text-secondary">Home</a>
+    </li>
+    <li>
+        <a href="{% url 'listuserquest' %}" class="nav-link px-2 text-secondary">Tasks List</a>
+    </li>
+    <li>
+        <a href="{% url 'not_completed' %}" class="nav-link px-2 text-secondary">Not Completed</a>
+    </li>
+    <li>
+        <a href="{% url 'ticketsdb' %}" class="nav-link px-2 text-secondary">Tickets</a>
+    </li>
 
-        <td><a href="{%url 'listuserquest'%}">Tasks list</a></td>
-        <td><a href="{%url 'createuser'%}">Create user</a></td>
-        <td><a href="{%url 'createquest'%}">Create quest</a></td>
-        <td><a href="{%url 'history'%}">History</a></td>
-        <td><a href="{%url 'calendar'%}">Calendar</a></td>
-        <td><a href="{%url 'not_completed'%}">Not completed</a></td>
-    {% elif user != user.is_superuser %}
-        <td><a href="{%url 'listuserquest'%}">Tasks list</a></td>
-        <td><a href="{%url 'calendar'%}">Calendar</a></td>
-        <td><a href="{%url 'not_completed'%}">Not completed</a></td>
-    {%endif%}
-    <td style="width: 100px ;">
-    <form method="post" action="{% url 'logout' %}">
-        {%csrf_token%}
-        <button type="submit">Logout</button>
-    </form>
-    </td>
-    </tr>
-    </table>
+
+    {% if user.is_superuser %}
+        <li>
+            <a href="{% url 'createquest' %}" class="nav-link px-2 text-secondary">Create Quest</a>
+        </li>
+        <li>
+            <a href="{% url 'history' %}" class="nav-link px-2 text-secondary">History</a>
+        </li>
+        <li>
+            <a href="{% url 'createuser' %}" class="nav-link px-2 text-secondary">Create User</a>
+        </li>
+    {% endif %}
+
+    <li>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </li>
+{% endif %}
+
+        </ul>
+      </div>
+    </div>
     {% block body%} {%endblock%}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
 </body>
 </html>

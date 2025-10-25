@@ -8,12 +8,12 @@
     <b>Description</b><br/>
     <textarea name="description" rows="4" cols="45" maxlength="255"></textarea><br/>
     <input type="date" name="dead_line"><br/>
-    <select name="assigned_to">
+    <select name="assigned_to"class="form-select" aria-label="Default select example" style="width: 10rem;">
             {% for uid in usersid %}
                  <option value="{{ uid.id }}">{{ uid.username }}</option>
             {%endfor%}
     </select><br/>
-    <button type="submit">Create</button>
+    <button type="submit" class="btn btn-primary">Create</button>
 </form>
 
 {%endblock%}

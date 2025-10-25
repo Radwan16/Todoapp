@@ -4,20 +4,26 @@
 <form method="post" action="">
    {%csrf_token%}
 {%for quest in quests%}
-   <b><br/>{{quest.title}}<br/></b>
-   {{quest.description}}<br/>
-   {{quest.assigned_to}}<br/>
-   {{quest.update}}<br/>
-   {{quest.dead_line}}<br/>
-   {{quest.made}}<br/>
-   {%if quest.comment != None%}
-      {{quest.comment}}<br/>
-   {%endif%}
-   {%if quest.made == True%}
-   <input type="checkbox" name="quests" value="{{quest.id}}">
-   {%endif%}
+   <label>
+      <div class="card" style="width: 18rem; height: 18rem;">
+         <div class="card-body">
+            <b class="card-title">{{quest.title}}</b>
+            <h6 class="card-text">{{quest.description}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">{{quest.assigned_to}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">{{quest.update}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">{{quest.dead_line}}</h6>
+            {{quest.made}}<br/>
+            {%if quest.comment != None%}
+               <p class="font-weight-normal">{{quest.comment}}</p>
+            {%endif%}
+            {%if quest.made == True%}
+            <input type="checkbox" name="quests" value="{{quest.id}}">
+            {%endif%}
+         </div>
+      </div>
+   </label>
    {%endfor%}
-</br><button type="submit">Restore</button>
+</br><button type="submit" class="btn btn-warning">Restore</button>
 </form>
 
 {%endblock%}

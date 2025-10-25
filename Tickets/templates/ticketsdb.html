@@ -1,0 +1,42 @@
+{%extends 'ticketsbase.html'%}
+{%block title%} Tickets Base {%endblock%}
+{%block body%}
+    {{block.super}}
+
+
+    <form method="post" action="">
+        {%csrf_token%}
+        {%for ticket in tickets%}
+            <label>
+            <div class="card" style="width: 18rem; height: 18rem;">
+                <div class="card-body">
+                    <i>ID:{{ticket.id}}</i></br>
+                    <b>Title: {{ticket.title}}</b></br>
+                    <p>Description: {{ticket.description}}</p>
+                    <p>Orders: {{ticket.who}}</p>
+                    <!-- {%if user.is_superuser%}
+                            <select name="assigned_to{{ticket.id}}">
+                            {%for userid in userids%}
+                                <option value="{{userid.id}}" name="tickets">{{userid.username}}</option>
+                            {%endfor%}
+                            </select>
+                    {%else%} -->
+                   
+                    <!-- {%endif%} -->
+                     <p>Made: {{ticket.made}}</p>
+                     {%if ticket.assigned_to != None%}
+                        <p>Takes: {{ticket.assigned_to}}</p>
+                    {%elif ticket.assigned_to == None%}
+                    <input type="checkbox" name="tickets" value="{{ ticket.id }}"></dbr>
+                    {%endif%}
+                    
+                </div>
+            </div>
+            </label>
+        {%endfor%}
+        
+
+        <br/><button type="submit" class="btn btn-primary">Get</button>
+        
+    </form>
+{%endblock%}

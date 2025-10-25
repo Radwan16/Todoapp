@@ -9,7 +9,6 @@ urlpatterns=[
     path('tasklist/', views.listuserquest, name="listuserquest"),
     path('createquest/',views.createquest, name="createquest"),
     path('history/',views.history, name="history"),
-    path('calendar/',views.calendar,name="calendar"),
     path('not_completed/',views.not_completed,name="not_completed"),
     path('',include(router.urls)),
     

@@ -11,10 +11,10 @@ router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'department',DepartmentViewSet)
 
-
 urlpatterns = [
     path('', include(router.urls)),
     path('quest/',include('main.urls')),
+    path('tickets/',include('Tickets.urls')),
     path('admin/', admin.site.urls),
     path('api-token/', views.obtain_auth_token),
     path('login/', auth_views.LoginView.as_view(),name="login"),

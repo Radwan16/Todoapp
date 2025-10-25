@@ -1,0 +1,18 @@
+{% extends 'ticketsbase.html' %}
+{%block title%} Create Tickets{%endblock%}
+{%block body%}
+    {{block.super}}
+    <form method="post" action="">
+        {%csrf_token%}
+        <b>Title</b><br/>
+        <input type="text" name="title"><br/>
+        <b>Description</b><br/>
+        <textarea name="description" rows="4" cols="45" maxlength="255"></textarea><br/>
+            <select name="departament_id">
+                {%for dep in dep%}
+                    <option value="{{dep.id}}">{{dep.name}}</option>
+                {%endfor%}
+            </select><br/><br/>
+            <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+{% endblock %}
