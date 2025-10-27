@@ -3,9 +3,10 @@
 {%block body%}
 <form method="post" action="">
    {%csrf_token%}
+   <h2>Quests</h2>
 {%for quest in quests%}
    <label>
-      <div class="card" style="width: 18rem; height: 18rem;">
+      <div class="card text-white bg-dark mb-3" style="width: 18rem; height: 18rem;">
          <div class="card-body">
             <b class="card-title">{{quest.title}}</b>
             <h6 class="card-text">{{quest.description}}</h6>
@@ -23,7 +24,22 @@
       </div>
    </label>
    {%endfor%}
-</br><button type="submit" class="btn btn-warning">Restore</button>
+</br><button type="submit" class="btn btn-warning">Restore</button><br/>
+   <h2>Tickets</h2>
+   {%for ticket in tickets%}
+      <label>
+      <div class="card text-dark bg-secondary mb-3" style="width: 18rem; height: 18rem; ">
+         <div class="card-body"style="color:white">
+            <i>ID: {{ticket.id}}</i><br/>
+            <b class="card-title">Title: {{ticket.title}}</b>
+            <h6 class="card-text">Description: {{ticket.description}}</h6>
+            <h6 class="card-text">Orders: {{ticket.who}}</h6>
+            <h6 class="card-text">Made: {{ticket.made}}</h6>
+            <h6 class="card-text">Takes: {{ticket.assigned_to}}</h6>
+         </div>
+      </div>
+      </label>
+   {%endfor%}
 </form>
 
 {%endblock%}

@@ -7,12 +7,12 @@
         {% for quest in quests %}
         <label>
             {%if quest.dead_line == today%}
-                <div class="card" style="width: 18rem; height: 18rem;">
+                <div class="card text-white bg-dark mb-3" style="width: 18rem; height: 18rem;">
                     <div class="card-body">
-                        <b class="card-title">{{quest.title}}</b><br/>
-                        <p class="card-text">{{quest.description}}<br/>
-                        {{quest.dead_line}}<br/><br/>
-                        <textarea name="comment_{{quest.id}}"rows="4" cols="25" maxlength="100"></textarea><br/>
+                        <b class="card-title">Title: {{quest.title}}</b><br/>
+                        <p class="card-text">Description: {{quest.description}}<br/>
+                        Dead_line: {{quest.dead_line}}<br/>
+                        Comment <textarea name="comment_{{quest.id}}"rows="4" cols="25" maxlength="100"></textarea><br/>
                         <input type="checkbox", name="quests", value="{{ quest.id }}"><br/>
                     </div>
                 </div>
@@ -23,12 +23,12 @@
         <h2>Tickets</h2>
         {%for ticket in tickets%}
         <label>
-            <div class="card" style="width: 18rem; height: 18rem;">
-                <div class="card-body">
-                    <i>{{ticket.id}}</i><br/>
-                    <b class="card-title">{{ticket.title}}</b><br/>
-                    <p class="card-text">{{ticket.description}}</p>
-                    <p>{{ticket.who}}</p>
+            <div class="card text-dark bg-secondary mb-3" style="width: 18rem; height: 18rem;">
+                <div class="card-body" style="color:white">
+                    <i>ID:{{ticket.id}}</i><br/>
+                    <b class="card-title">Title: {{ticket.title}}</b><br/>
+                    <p class="card-text">Description: {{ticket.description}}</p>
+                    <p>Orders: {{ticket.who}}</p>
                     <input type="checkbox", name="tickets", value="{{ ticket.id }}"><br/>
                 </div>
             </div>

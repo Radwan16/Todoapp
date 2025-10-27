@@ -28,8 +28,9 @@ def ticketsdb(request):
         return redirect('ticketsdb')
     dep = Department.objects.prefetch_related("users").get(users=request.user)
     userids = dep.users.all() if dep else[] 
-    tickets = Ticket.objects.filter(departament = Department.objects.select_related().get(users=request.user))
-    return render(request,'ticketsdb.html',{'tickets':tickets, 'userids':userids})
+    tickets = Ticket.objects.filter(departament = Department.objects.select_related().get(users=request.user), made = False)
+    ticket = Ticket.objects.filter(who = request.user)
+    return render(request,'ticketsdb.html',{'tickets':tickets, 'ticket':ticket,'userids':userids})
 
 def createtickets(request):
     departament = Department.objects.all()

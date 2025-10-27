@@ -97,7 +97,7 @@ def createquest(request):
         description = request.POST.get('description')
         dead_line = request.POST.get('dead_line')
         assigned_to_id = request.POST.get('assigned_to')
-        # u = Department.objects.prefetch_related("users").get(users=request.user)
+        u = Department.objects.prefetch_related("users").get(users=request.user)
         Quest.objects.create(
             title=title,
             description=description,
@@ -129,7 +129,8 @@ def history(request):
             Quest.objects.filter(id__in=quests_ids).update(made=False)
     dep=Department.objects.select_related().get(users=request.user)
     quests=Quest.objects.filter(departament=dep)
-    return render(request, 'history.html',{'quests':quests})
+    tickets=Ticket.objects.filter(departament=dep)
+    return render(request, 'history.html',{'quests':quests, 'tickets':tickets})
 
 def home(request):
     departament_name = Department.objects.select_related().get(users=request.user)

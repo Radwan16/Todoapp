@@ -3,13 +3,13 @@
 {%block body%}
     {{block.super}}
 
-
+    <h2>To do</h2>
     <form method="post" action="">
         {%csrf_token%}
         {%for ticket in tickets%}
             <label>
-            <div class="card" style="width: 18rem; height: 18rem;">
-                <div class="card-body">
+            <div class="card text-dark bg-secondary mb-3" style="width: 18rem; height: 18rem;">
+                <div class="card-body"style="color:white">
                     <i>ID:{{ticket.id}}</i></br>
                     <b>Title: {{ticket.title}}</b></br>
                     <p>Description: {{ticket.description}}</p>
@@ -34,9 +34,25 @@
             </div>
             </label>
         {%endfor%}
-        
-
-        <br/><button type="submit" class="btn btn-primary">Get</button>
-        
+        <br/><button type="submit" class="btn btn-primary">Get</button> 
     </form>
+    <h2>Orders</h2>
+    {%for tk in ticket%}
+        <label>
+            <div class="card text-dark bg-secondary mb-3" style="width: 18rem; height: 18rem;">
+                <div class="card-body" style="color:white">
+                    <i>ID:{{tk.id}}</i><br/>
+                    <b>Title: {{tk.title}}</b>
+                    <p>Description: {{tk.description}}</p>
+                    <p>Made: {{tk.made}}</p>
+                    <p>Department: {{tk.departament}}</p>
+                    {%if tk.assigned_to != None%}
+                        <p>Takes: {{tk.assigned_to}}</p>
+                    {%else%}   
+                        <p>Takes:
+                    {%endif%}
+                </div>
+            </div>
+        </label>        
+    {%endfor%}
 {%endblock%}
