@@ -65,30 +65,33 @@ def listuserquest(request):
         for quest_id in quest_ids:
             if quest_id:
                 comment = request.POST.get(f'comment_{quest_id}','')
-                Quest.objects.filter(id__in=quest_ids).update(made=True, comment=comment)
+                Quest.objects.select_related("departament").filter(id__in=quest_ids).update(made=True, comment=comment)
 
         for ticket_id in ticket_ids:
             if ticket_id:
-                Ticket.objects.filter(id__in=ticket_ids).update(made=True)
+                Ticket.objects.select_related("departament").filter(id__in=ticket_ids).update(made=True)
 
         return redirect('listuserquest')
-    tickets = Ticket.objects.filter(made=False, assigned_to=request.user)
-    quests = Quest.objects.filter(made=False, assigned_to=request.user) 
-    return render(request, 'tasklist.html', {'quests':quests, 'tickets':tickets,'today':date.today()})
+    
+    tickets = Ticket.objects.select_related("assigned_to").filter(made=False, assigned_to=request.user)
+    quests = Quest.objects.select_related("assigned_to").filter(made=False, assigned_to=request.user) 
+    return render(request, 'tasklist.html', {'quests':quests,'tickets':tickets,'today':date.today()})
 
 def createuser(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         is_superuser = bool(request.POST.get('is_superuser'))
-        new_user = User.objects.create_user(
-                username=username,
-                password=password,
-                is_superuser = is_superuser
-            )
-        return redirect('createuser')
-    # dep = Department.objects.prefetch_related("users").get(users=request.user)
-    # dep.users.add(new_user)
+
+
+        new_user = User(username=username)
+        new_user.set_password(password)
+        new_user.is_superuser = is_superuser
+        new_user.save()
+        # dep = Department.objects.prefetch_related("users").filter(users=request.user).first()
+        # user = User.objects.select_related().filter().last()
+        # dep.users.add(user)
+        
     return render(request,'createnewuser.html')
 
 def createquest(request):
@@ -108,15 +111,14 @@ def createquest(request):
         return redirect('createquest')
     u = Department.objects.prefetch_related("users").get(users=request.user)
     usersid = u.users.all() if u else []
-    quests = Quest.objects.all()
-    return render(request, 'createquest.html', {'quests': quests, 'usersid': usersid})
+    return render(request, 'createquest.html', {'usersid': usersid})
 
 def not_completed(request):
     if request.method=='POST':
         quest_ids = request.POST.getlist('quests')
         for quest_id in quest_ids:
             comment = request.POST.get(f'comment_{quest_id}','')
-            Quest.objects.filter(id__in=quest_ids).update(made=True, comment=comment)
+            Quest.objects.select_related("assigned_to").filter(id__in=quest_ids).update(made=True, comment=comment)
         return redirect('not_completed')
     quests = Quest.objects.filter(made=False, departament=Department.objects.select_related().get(users=request.user), dead_line__lt = date.today(), assigned_to=request.user) 
     return render(request, 'not_completed.html', {'quests':quests})
@@ -127,11 +129,11 @@ def history(request):
         quests_ids = request.POST.getlist('quests')
         for quests_id in quests_ids:
             Quest.objects.filter(id__in=quests_ids).update(made=False)
-    dep=Department.objects.select_related().get(users=request.user)
-    quests=Quest.objects.filter(departament=dep)
-    tickets=Ticket.objects.filter(departament=dep)
+    dep=Department.objects.prefetch_related("users").get(users=request.user)
+    quests=Quest.objects.select_related("assigned_to").filter(departament=dep)
+    tickets=Ticket.objects.select_related("assigned_to").filter(departament=dep)
     return render(request, 'history.html',{'quests':quests, 'tickets':tickets})
 
 def home(request):
-    departament_name = Department.objects.select_related().get(users=request.user)
+    departament_name = Department.objects.prefetch_related("users").get(users=request.user)
     return render(request, 'home.html', {'departament_name':departament_name})
