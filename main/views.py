@@ -8,6 +8,10 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from datetime import date
 from Tickets.models import Ticket
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions
+from .mypermission import IsSuperUser
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
@@ -56,7 +60,8 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-
+@api_view(['GET','POST'])
+@permission_classes([permissions.IsAuthenticated])
 def listuserquest(request):   
     if request.method == 'POST':
         quest_ids = request.POST.getlist('quests')
@@ -77,6 +82,8 @@ def listuserquest(request):
     quests = Quest.objects.select_related("assigned_to").filter(made=False, assigned_to=request.user) 
     return render(request, 'tasklist.html', {'quests':quests,'tickets':tickets,'today':date.today()})
 
+@api_view(['GET','POST'])
+@permission_classes([IsSuperUser])
 def createuser(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -89,11 +96,12 @@ def createuser(request):
         new_user.is_superuser = is_superuser
         new_user.save()
         # dep = Department.objects.prefetch_related("users").filter(users=request.user).first()
-        # user = User.objects.select_related().filter().last()
         # dep.users.add(user)
         
     return render(request,'createnewuser.html')
 
+@api_view(['GET','POST'])
+@permission_classes([IsSuperUser])
 def createquest(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -112,7 +120,8 @@ def createquest(request):
     u = Department.objects.prefetch_related("users").get(users=request.user)
     usersid = u.users.all() if u else []
     return render(request, 'createquest.html', {'usersid': usersid})
-
+@api_view(['GET','POST'])
+@permission_classes([permissions.IsAuthenticated])
 def not_completed(request):
     if request.method=='POST':
         quest_ids = request.POST.getlist('quests')
@@ -123,7 +132,8 @@ def not_completed(request):
     quests = Quest.objects.filter(made=False, departament=Department.objects.select_related().get(users=request.user), dead_line__lt = date.today(), assigned_to=request.user) 
     return render(request, 'not_completed.html', {'quests':quests})
 
-
+@api_view(['GET','POST'])
+@permission_classes([IsSuperUser])
 def history(request):
     if request.method == 'POST':
         quests_ids = request.POST.getlist('quests')
@@ -133,7 +143,8 @@ def history(request):
     quests=Quest.objects.select_related("assigned_to").filter(departament=dep)
     tickets=Ticket.objects.select_related("assigned_to").filter(departament=dep)
     return render(request, 'history.html',{'quests':quests, 'tickets':tickets})
-
+@api_view(['GET','POST'])
+@permission_classes([permissions.IsAuthenticated])
 def home(request):
     departament_name = Department.objects.prefetch_related("users").get(users=request.user)
     return render(request, 'home.html', {'departament_name':departament_name})
