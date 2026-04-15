@@ -9,8 +9,10 @@ from django.contrib import messages
 from datetime import date
 from Tickets.models import Ticket
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import permissions
+from rest_framework import permissions,status
 from .mypermission import IsSuperUser
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db import transaction
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
@@ -82,23 +84,28 @@ def listuserquest(request):
     quests = Quest.objects.select_related("assigned_to").filter(made=False, assigned_to=request.user) 
     return render(request, 'tasklist.html', {'quests':quests,'tickets':tickets,'today':date.today()})
 
-@api_view(['GET','POST'])
-@permission_classes([IsSuperUser])
+@login_required
+@transaction.atomic
 def createuser(request):
+    current_user = request.user
+    dep = current_user.departments.get()
+    
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         is_superuser = bool(request.POST.get('is_superuser'))
 
-
-        new_user = User(username=username)
+        new_user = User.objects.create(
+            username = username,
+            is_superuser = is_superuser
+        )
         new_user.set_password(password)
-        new_user.is_superuser = is_superuser
         new_user.save()
-        # dep = Department.objects.prefetch_related("users").filter(users=request.user).first()
-        # dep.users.add(user)
-        
-    return render(request,'createnewuser.html')
+
+        dep.users.add(new_user)
+    
+    return render(request, "createnewuser.html", {"current_departments":dep ,"current_user":current_user})
+
 
 @api_view(['GET','POST'])
 @permission_classes([IsSuperUser])
@@ -143,6 +150,26 @@ def history(request):
     quests=Quest.objects.select_related("assigned_to").filter(departament=dep)
     tickets=Ticket.objects.select_related("assigned_to").filter(departament=dep)
     return render(request, 'history.html',{'quests':quests, 'tickets':tickets})
+
+# def createProject(request):
+#     if request.method == "POST":
+#         projectName = request.POST.get('name')
+#         projectdescription = request.POST.get('description')
+#         projectdead_line = request.POST.get('dead_line')
+#         projectmade = request.POST.get('made')
+#         projectassigned_to = request.POST.get('assigned_to')
+#         managers = request.POST.get('managers')
+#         Project.objects.create(
+#             title = projectName,
+#             description = projectdescription,
+#             dead_line = projectdead_line,
+#             made = projectmade,
+#             assigned_to = projectassigned_to,
+#             managers = managers
+#         )
+
+#     return render(request, 'projects.html')
+
 @api_view(['GET','POST'])
 @permission_classes([permissions.IsAuthenticated])
 def home(request):
