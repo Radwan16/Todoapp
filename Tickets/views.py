@@ -21,16 +21,21 @@ class TicketsViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
 def ticketsdb(request):
+    current_user = request.user
     if request.method == 'POST':
         ticket_ids = request.POST.getlist('tickets')
+        assigned_to_id = request.POST.get('assigned_to')
         for ticket_id in ticket_ids:
-            Ticket.objects.filter(id__in=ticket_ids).update( assigned_to = request.user.id)
+            if current_user.is_superuser:
+                Ticket.objects.filter(id__in=ticket_ids).update(assigned_to_id = assigned_to_id)
+            else:
+                Ticket.objects.filter(id__in=ticket_ids).update(assigned_to = request.user.id)
         return redirect('ticketsdb')
     dep = Department.objects.prefetch_related("users").get(users=request.user)
     userids = dep.users.all() if dep else[] 
     tickets = Ticket.objects.filter(departament = Department.objects.select_related().get(users=request.user), made = False)
     ticket = Ticket.objects.filter(who = request.user)
-    return render(request,'ticketsdb.html',{'tickets':tickets, 'ticket':ticket,'userids':userids})
+    return render(request,'ticketsdb.html',{'tickets':tickets, 'ticket':ticket,'userids':userids, 'user':current_user})
 
 def createtickets(request):
     departament = Department.objects.all()
