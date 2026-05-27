@@ -1,0 +1,21 @@
+{%extends 'base.html'%}
+{%block title%} Details {%endblock%}
+{%block body%}
+        {% csrf_token %}
+        <form method="get">
+                <input type="date" name="dead_line"><br/>
+                <button type="submit">Search</button>
+                
+        {%for quest in quests%}
+                <div class="card text-white bg-dark mb-3" style="width: 18rem; height: 12rem;">
+                    <div class="card-body">
+                        <b class="card-title">Title: {{quest.title}}</b><br/>
+                        <div class="crollable-desc mt-2 mb-2">
+                            <p class="card-text, description">Description: {{quest.description}}<br/></p>
+                            Dead_line: {{quest.dead_line}}<br/>
+                        </div>
+                    </div>
+                </div>
+        {%endfor%}
+        </form>
+{%endblock%}

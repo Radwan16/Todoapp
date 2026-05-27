@@ -4,8 +4,7 @@ from rest_framework import routers
 from main.views import UserViewSet, DepartmentViewSet,logout_view
 from rest_framework.authtoken import views
 from django.contrib.auth import views as auth_views
-from main.views import home
-from main.models import Quest
+from main.views import home , userupdate
 from django.views.generic.dates import ArchiveIndexView
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -20,5 +19,8 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(),name="login"),
     path('logout/', logout_view, name="logout"),
     path('home/', home, name="home"),
+    # path('project/', createProject, name="createProject"),
+    # path('webpush/', include('webpush.urls')),
+    path('userupdate/',userupdate, name="userupdate")
 
 ]

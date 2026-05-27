@@ -29,7 +29,6 @@ DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,7 +44,7 @@ INSTALLED_APPS = [
     'django',
     'django_extensions',
     'dotenv',
-    
+    'webpush',
     'main.apps.MainConfig',
     'Tickets.apps.TicketsConfig'
 

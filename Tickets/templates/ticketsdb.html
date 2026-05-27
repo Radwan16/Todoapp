@@ -12,7 +12,7 @@
                 <div class="card-body"style="color:white">
                     <i>ID:{{ticket.id}}</i></br>
                     <b>Title: {{ticket.title}}</b></br>
-                    <p>Description: {{ticket.description}}</p>
+                    <p div class="description">Description: {{ticket.description}}</p>
                     <p>Orders: {{ticket.who}}</p>
                      <p>Made: {{ticket.made}}</p>
                     {%if user.is_superuser and ticket.assigned_to == None%}
@@ -21,11 +21,11 @@
                                 <option value="{{ uid.id }}">{{ uid.username }}</option>
                                 {%endfor%}
                             </select></br>
-                            <input type="checkbox" name="tickets" value="{{ ticket.id }}"></br>
+                            <input type="checkbox" name="tickets" value="{{ ticket.id }}" required></br>
                     {%elif ticket.assigned_to != None%}
                         <p>Takes: {{ticket.assigned_to}}</p>
                     {%elif user.is_authenticated  and ticket.assigned_to == None%}
-                        <input type="checkbox" name="tickets" value="{{ ticket.id }}"></br>
+                        <input type="checkbox" name="tickets" value="{{ ticket.id }}" required></br>
                     {%endif%}
                     
                 </div>

@@ -9,9 +9,9 @@
             <div class="card" style="width: 18rem; height: 18rem;">
                 <div class="card-body">
                     <b class="card-title">{{quest.title}}</b></br>
-                    <p class="card-text">{{quest.description}}</br></p>
+                    <p class="card-text, description">{{quest.description}}</br></p>
                     {{quest.dead_line}}</br></br>
-                    <textarea name="comment_{{quest.id}}" rows="4"cols="25"maxlength="100"></textarea></br>
+                    <textarea name="comment_{{quest.id}}" rows="3"cols="25"maxlength="100"></textarea></br>
                     <input type="checkbox" name="quests" value="{{quest.id}}"></br>
                 </div>
             </div>

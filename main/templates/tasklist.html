@@ -10,15 +10,16 @@
                 <div class="card text-white bg-dark mb-3" style="width: 18rem; height: 18rem;">
                     <div class="card-body">
                         <b class="card-title">Title: {{quest.title}}</b><br/>
-                        <p class="card-text">Description: {{quest.description}}<br/>
-                        Dead_line: {{quest.dead_line}}<br/>
-                        Comment <textarea name="comment_{{quest.id}}"rows="4" cols="25" maxlength="100"></textarea><br/>
+                        <div class="crollable-desc mt-2 mb-2">
+                            <p class="card-text, description">Description: {{quest.description}}<br/></p>
+                            Dead_line: {{quest.dead_line}}<br/>
+                        </div>
+                        Comment <textarea name="comment_{{quest.id}}"rows="2" cols="25" maxlength="100"></textarea><br/>
                         <input type="checkbox", name="quests", value="{{ quest.id }}"><br/>
                     </div>
                 </div>
             {%endif%}
         </label>
-
         {%endfor%}
         <h2>Tickets</h2>
             {%for ticket in tickets %}
@@ -27,7 +28,7 @@
                 <div class="card-body" style="color:white">
                     <i>ID:{{ticket.id}}</i><br/>
                     <b class="card-title">Title: {{ticket.title}}</b><br/>
-                    <p class="card-text">Description: {{ticket.description}}</p>
+                    <p class="card-text, description">Description: {{ticket.description}}</p>
                     <p>Orders: {{ticket.who}}</p>
                     <input type="checkbox", name="tickets", value="{{ ticket.id }}"><br/>
                 </div>

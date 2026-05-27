@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import Quest, Department
+from .models import Quest, Department , Project, Tag
 from rest_framework import viewsets
-from .serializer import QuestSerializer, UserSerializer, DepartmentSerializer
+from .serializer import QuestSerializer, UserSerializer, DepartmentSerializer ,ProjectSerializer
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth import logout 
@@ -11,12 +11,16 @@ from Tickets.models import Ticket
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions,status
 from .mypermission import IsSuperUser
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db import transaction
-
+from django.utils.dateparse import parse_date
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
+
+    def update(self, request ,*args, **kwargs):
+        user = self.get_object()
+        user.is_superuser = request.data['is_superuser']
+        serializer = UserSerializer('auth.User', many=True)
+        return Response(serializer.data)
 
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
@@ -39,7 +43,8 @@ class QuestViewSet(viewsets.ModelViewSet):
             description = request.data['description'],
             dead_line = request.data['dead_line'],
             assigned_to = User.objects.get(id=request.POST['assigned_to']),
-            departament = Department.objects.get(users=request.user)
+            departament = Department.objects.get(users=request.user),
+            tag = request.data['tag']
 
         )
         serializer = QuestSerializer(quest,many=False)
@@ -57,6 +62,18 @@ class QuestViewSet(viewsets.ModelViewSet):
         quest.save()
         serializer = QuestSerializer(quest,many=False)
         return Response(serializer.data)
+    
+# class ProjectViewsSet(viewsets.ModelViewSet):
+    # queryset = Project.objects.all()
+    # serializer_class = ProjectSerializer
+
+    # def create(self, request, *args, **kwargs):
+    #     project = Project.objects.create(
+    #         projectName = request.data['projectName'],
+    #         managers = request.data["managers"]
+    #     )
+    #     serializer = ProjectSerializer(project,many=False)
+    #     return Response(serializer.data)
 
 def logout_view(request):
     logout(request)
@@ -84,8 +101,8 @@ def listuserquest(request):
     quests = Quest.objects.select_related("assigned_to").filter(made=False, assigned_to=request.user) 
     return render(request, 'tasklist.html', {'quests':quests,'tickets':tickets,'today':date.today()})
 
-@login_required
-@transaction.atomic
+@api_view(['GET','POST'])
+@permission_classes([IsSuperUser])
 def createuser(request):
     current_user = request.user
     dep = current_user.departments.get()
@@ -104,7 +121,27 @@ def createuser(request):
 
         dep.users.add(new_user)
     
-    return render(request, "createnewuser.html", {"current_departments":dep ,"current_user":current_user})
+    return render(request, "createnewuser.html")
+
+@api_view(['GET','POST'])
+@permission_classes([IsSuperUser])
+def userupdate(request):
+    current_user = request.user
+    
+    dep = current_user.departments.get() 
+    
+    if request.method == 'POST':
+        users = dep.users.all()
+        for user in users:
+            is_super = f'is_superuser_{user.id}' in request.POST
+            
+            if user.is_superuser != is_super:
+                user.is_superuser = is_super
+                user.save()
+        return redirect('userupdate')
+        
+    users = dep.users.all()
+    return render(request, 'userupdate.html', {'users': users})
 
 
 @api_view(['GET','POST'])
@@ -151,27 +188,31 @@ def history(request):
     tickets=Ticket.objects.select_related("assigned_to").filter(departament=dep)
     return render(request, 'history.html',{'quests':quests, 'tickets':tickets})
 
-# def createProject(request):
-#     if request.method == "POST":
-#         projectName = request.POST.get('name')
-#         projectdescription = request.POST.get('description')
-#         projectdead_line = request.POST.get('dead_line')
-#         projectmade = request.POST.get('made')
-#         projectassigned_to = request.POST.get('assigned_to')
-#         managers = request.POST.get('managers')
-#         Project.objects.create(
-#             title = projectName,
-#             description = projectdescription,
-#             dead_line = projectdead_line,
-#             made = projectmade,
-#             assigned_to = projectassigned_to,
-#             managers = managers
-#         )
-
-#     return render(request, 'projects.html')
+def createProject(request):
+    managers=Department.objects.prefetch_related("users").all()
+    if request.method == 'POST':
+        projectName = request.POST.get('projectName')
+        managers = request.POST.getlist('managers')
+        new=Project.objects.create(projectName = projectName)
+        if managers:
+            new.managers.set(managers.id())
+        return redirect('createProject')
+    
+    return render(request, 'createProjects.html',{"managers":managers})
 
 @api_view(['GET','POST'])
 @permission_classes([permissions.IsAuthenticated])
 def home(request):
+    dep = request.user.departments.get()
+    users = dep.users.filter(is_superuser=False)
     departament_name = Department.objects.prefetch_related("users").get(users=request.user)
-    return render(request, 'home.html', {'departament_name':departament_name})
+    return render(request, 'home.html', {'departament_name':departament_name, "users":users})
+
+@api_view(['GET','POST'])
+@permission_classes([IsSuperUser])
+def questdetails(request, tag):
+    if request.method == "GET":
+        dead_line = request.GET.get('dead_line')
+    filter_date = parse_date(str(dead_line)) or date.today()
+    quests = Quest.objects.filter(tag = tag, dead_line = filter_date)
+    return render(request, "detailquest.html",{"quests":quests})

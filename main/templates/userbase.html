@@ -1,0 +1,13 @@
+{%extends 'base.html'%}
+{%block body%}
+    <table>
+        <tr style="width: 100%;">
+            <td>
+                <a href="{% url 'createuser' %}" class="nav-link px-2 text-secondary" style="text-align: center;">Create</a>
+            </td>
+            <td>
+                <a href="{% url 'userupdate' %}" class="nav-link px-2 text-secondary" style="text-align: center;">Update</a>
+            </td>
+        </tr>
+    </table>
+{%endblock%}

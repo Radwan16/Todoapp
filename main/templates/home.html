@@ -2,4 +2,9 @@
 {% block title %}Home{%endblock%}
 {%block body%}
 <h1>Witaj w dziale {{departament_name}}</h1>
+    {%if user.is_superuser%}
+        {%for user in users%}
+            <a href="/quest/{{user|lower}}">{{user.username}}</a>
+        {%endfor%}
+    {%endif%}
 {%endblock%}

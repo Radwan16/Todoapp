@@ -10,6 +10,7 @@ urlpatterns=[
     path('createquest/',views.createquest, name="createquest"),
     path('history/',views.history, name="history"),
     path('not_completed/',views.not_completed,name="not_completed"),
-    path('',include(router.urls)),
+    path('<slug:tag>', views.questdetails, name="detailquest"),
+    path('',include(router.urls))
     
 ]

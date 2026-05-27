@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Quest , Department
+from .models import Quest , Department ,Project
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.HyperlinkedModelSerializer ):
@@ -22,5 +22,10 @@ class QuestSerializer(serializers.ModelSerializer):
     assigned_to = serializers.SlugRelatedField(slug_field = 'username', queryset=User.objects.all())
     class Meta:
         model = Quest
-        fields = ['id','title', 'description','dead_line','made','assigned_to','departament','comment']
+        fields = ['id','title', 'description','dead_line','made','assigned_to','departament','comment','tag']
         read_only_fields=('departament',)
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ["projectName","managers"]
