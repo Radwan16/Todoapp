@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions,status
 from .mypermission import IsSuperUser
 from django.utils.dateparse import parse_date
+from django.http import HttpResponse
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
@@ -104,13 +105,11 @@ def listuserquest(request):
 @api_view(['GET','POST'])
 @permission_classes([IsSuperUser])
 def createuser(request):
-    current_user = request.user
-    dep = current_user.departments.get()
-    
+    dep = request.user.departments.get() 
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        is_superuser = bool(request.POST.get('is_superuser'))
+        is_superuser = bool(request.POST.get('is_superuser')) =='on'
 
         new_user = User.objects.create(
             username = username,
@@ -118,9 +117,10 @@ def createuser(request):
         )
         new_user.set_password(password)
         new_user.save()
-
-        dep.users.add(new_user)
-    
+        try:
+            dep.users.add(new_user)
+        except:
+            pass
     return render(request, "createnewuser.html")
 
 @api_view(['GET','POST'])
@@ -211,8 +211,12 @@ def home(request):
 @api_view(['GET','POST'])
 @permission_classes([IsSuperUser])
 def questdetails(request, tag):
+    dep = request.user.departments.get()
     if request.method == "GET":
         dead_line = request.GET.get('dead_line')
-    filter_date = parse_date(str(dead_line)) or date.today()
-    quests = Quest.objects.filter(tag = tag, dead_line = filter_date)
+    filter_date = parse_date(str(dead_line)) if dead_line else date.today()
+    quests = Quest.objects.filter(tag = tag, dead_line = filter_date, departament = dep)
+    CheckDep = Quest.objects.filter(tag = tag, departament = dep)
+    if not CheckDep.exists():
+        return HttpResponse("<b><center>Ups. Wrong department or no quests found! <a href='/home/'>Return</a></center></b>")
     return render(request, "detailquest.html",{"quests":quests})

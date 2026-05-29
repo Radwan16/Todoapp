@@ -2,7 +2,8 @@
     {%block title%}Create user {%endblock%}
 {%block body%}
     {{block.super}}
-    <form method="post" action="/users/">
+    {{dep.name}}
+    <form method="post" action="">
         {% csrf_token %}
         <label for="username">Username:</label>
         <input type="text" id="username" name="username"><br/>
