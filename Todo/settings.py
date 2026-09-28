@@ -13,21 +13,35 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+from django.core.management.utils import get_random_secret_key
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
+ENV_FILE = BASE_DIR /'.env'
+SECRET_KEY = os.getenv('SECRET_KEY')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
-
+if not SECRET_KEY:
+    SECRET_KEY = get_random_secret_key()
+    with open (ENV_FILE,'a') as f:
+        f.write(f'\nSECRET_KEY={SECRET_KEY}\n')
+    os.environ['SECRET_KEY'] = SECRET_KEY
+    print("Wygenerowano SECRET_KEY oraz zapisano go w pliku .env ")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = []
+
+DEBUG = os.getenv('DEBUG')
+debug_str = os.getenv('DEBUG')
+if debug_str is None:
+    debug_str = 'false'
+    with open(ENV_FILE,'a')as f:
+        f.write(f"DEBUG = {debug_str}\n")
+    os.environ['DEBUG'] = debug_str
+
+DEBUG = debug_str.lower() in ('true','1','yes')
+ALLOWED_HOSTS = ["localhost"]
 
 # Application definition
 
@@ -44,7 +58,7 @@ INSTALLED_APPS = [
     'django',
     'django_extensions',
     'dotenv',
-    'webpush',
+    
     'main.apps.MainConfig',
     'Tickets.apps.TicketsConfig'
 
