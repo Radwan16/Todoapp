@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+{% endblock %}
+{% block body %}
+    <table>
+        <tr style="width: 100%;">
+            <td>
+                <a href="{% url 'main:managercreate' %}" class="nav-link px-2 text-secondary" style="text-align: center;">Create Manager</a>
+            </td>
+            <td>
+                <a href="{% url 'main:depcreate' %}" class="nav-link px-2 text-secondary" style="text-align: center;">Create Department</a>
+            </td>
+        </tr>
+    </table>
+{% endblock %}
