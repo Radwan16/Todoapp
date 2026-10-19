@@ -2,13 +2,15 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from main.views import UserViewSet, DepartmentViewSet,logout_view
+from Tickets.views import TicketsViewSet
 from rest_framework.authtoken import views
 from django.contrib.auth import views as auth_views
-from main.views import home , userupdate
+from main.views import home , userupdate, dep_create
 from django.views.generic.dates import ArchiveIndexView
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'department',DepartmentViewSet)
+
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -21,6 +23,7 @@ urlpatterns = [
     path('home/', home, name="home"),
     # path('project/', createProject, name="createProject"),
     # path('webpush/', include('webpush.urls')),
-    path('userupdate/',userupdate, name="userupdate")
+    path('userupdate/',userupdate, name="userupdate"),
+    
 
 ]

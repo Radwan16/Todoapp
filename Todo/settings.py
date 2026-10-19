@@ -41,7 +41,8 @@ if debug_str is None:
     os.environ['DEBUG'] = debug_str
 
 DEBUG = debug_str.lower() in ('true','1','yes')
-ALLOWED_HOSTS = ["localhost"]
+
+ALLOWED_HOSTS = ["localhost","127.0.0.1","web"]
 
 # Application definition
 
@@ -58,6 +59,8 @@ INSTALLED_APPS = [
     'django',
     'django_extensions',
     'dotenv',
+    'crispy_forms',
+    'crispy_bootstrap5',
     
     'main.apps.MainConfig',
     'Tickets.apps.TicketsConfig'
@@ -146,6 +149,8 @@ STATIC_URL = 'static/'
 LOGIN_URL='login'
 LOGIN_REDIRECT_URL='home'
 LOGOUT_REDIRECT_URL='login'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

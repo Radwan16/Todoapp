@@ -4,6 +4,7 @@ from .serializer import TicketSerializer
 from .models import Ticket
 from rest_framework.response import Response
 from main.models import Department
+from django.contrib.auth.models import User
 
 class TicketsViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
@@ -13,8 +14,8 @@ class TicketsViewSet(viewsets.ModelViewSet):
         ticket = Ticket.objects.create(
             title = request.data['title'],
             description = request.data['description'],
-            who = request.data['who'],
-            departament = request.data['departament'],
+            who = User.objects.get(id=request.data['who']),
+            departament = Department.objects.get(id=request.data['departament'])
         )
 
         serializer = TicketSerializer(ticket, many=False)
@@ -30,7 +31,7 @@ def ticketsdb(request):
                 Ticket.objects.filter(id__in=ticket_ids).update(assigned_to_id = assigned_to_id)
             else:
                 Ticket.objects.filter(id__in=ticket_ids).update(assigned_to = request.user.id)
-        return redirect('ticketsdb')
+        return redirect('tickets:ticketsdb')
     dep = Department.objects.prefetch_related("users").get(users=request.user)
     userids = dep.users.all() if dep else[] 
     tickets = Ticket.objects.filter(departament = Department.objects.select_related().get(users=request.user), made = False)
@@ -50,6 +51,6 @@ def createtickets(request):
             departament = departament_id
         )
         
-        return redirect('createtickets')
+        return redirect('tickets:createtickets')
     return render(request, 'createticket.html', {'dep':departament})
 

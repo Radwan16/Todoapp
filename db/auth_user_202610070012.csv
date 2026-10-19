@@ -1,0 +1,15 @@
+"id","password","last_login","is_superuser","username","first_name","last_name","email","is_staff","is_active","date_joined"
+36,pbkdf2_sha256$1000000$UaSIrtJ2P8yS8w3zJId0N7$eTwX014N1Q/ck1OsGcoWXPQpujB95oAa+MPWTTfbE0U=,2026-05-05 22:24:02.000 +0200,false,Chorazy,"","",chorazy@todo.com,false,true,2025-12-05 21:26:41.000 +0100
+4,pbkdf2_sha256$1000000$VvrxSNZhtsGy8ZsyfWRKcd$9BBA94AiiNWSgrHRCJZlMMZVk2Tu7TEzW45iGuvq+bM=,2026-05-29 20:31:20.000 +0200,true,Docent,"","",docent@todo.com,false,true,2025-11-09 18:05:15.000 +0100
+5,pbkdf2_sha256$1000000$roDFOLXl2bDhOK5k9fpiHx$37CACbisaCDVxbnjL5kQJlZWG4EgGXKPN4zrnIFLJl4=,2025-12-05 21:22:05.000 +0100,false,Janusz,"","",janusz@todo.com,false,true,2025-11-09 18:05:42.000 +0100
+6,pbkdf2_sha256$1000000$y32LxxZ8RQl0OjKDR9zoKj$EcDuIuiWbfDVdM0+CgHMUMjoPSywWeEOH+WI+r2FVjk=,2026-05-29 22:30:39.000 +0200,true,Kamil,"","",kamil@todo.com,false,true,2025-11-09 18:05:58.000 +0100
+124,pbkdf2_sha256$1000000$oA5Nuult773qXfF0WNVFBD$73xHW0yNlsGADfqmZLTWvhjLdsbXRJn5jQ/GEg5SnLM=,2026-05-29 22:21:21.000 +0200,false,kut,"","",kut@todo.com,false,true,2026-05-29 22:19:27.000 +0200
+158,pbkdf2_sha256$1000000$MkvOS8KGBrjInHWiem5opM$lzIS+SXmxAgy+9eeFv7U25GaOMDOh9XfzOYywMX3Maw=,,false,n8nbot,"","",n8nbot@todo.com,false,true,2026-10-01 21:43:39.000 +0200
+125,pbkdf2_sha256$1000000$9OUf3IIfQOlcRuKR4IuyOm$93GGW0q7Fo/EBNkwWeYmoSrQHgJPD6/xNl5I7AiBbRc=,,false,Pawel,"","",pawel@todo.com,false,true,2026-05-29 22:37:40.000 +0200
+7,pbkdf2_sha256$1000000$PdyRP9vhCM0z50Gv22SL7k$G0ijQgeQJRcRX+UcCpWEHpTfKRiA9KpKRbBM0+1uKqA=,2026-05-29 21:28:56.000 +0200,false,Rks,"","",rks@todo.com,false,true,2025-11-09 18:06:18.000 +0100
+2,pbkdf2_sha256$1000000$EpZc402KBdzKgxkLVrfY8J$/3ISH8xRbDETe9mt0JvWGM81frYeDj5dw/VL+G7DIPo=,2026-10-05 22:13:56.000 +0200,true,Tytus,"","",tytus@todo.com,false,true,2025-11-09 18:02:53.000 +0100
+107,pbkdf2_sha256$1000000$BzH0Eke1JbljNGusMPL73V$6frdsDe47D4R0nC1YLQ7odMPUkLNqWB4iaP3psh8IvI=,2026-05-29 22:36:39.000 +0200,true,Wiesio,"","",wiesio@todo.com,false,true,2026-04-21 22:17:54.000 +0200
+106,pbkdf2_sha256$1000000$Kx6KxbcR9SXWkDwW8n9qh6$M1mdtPSkAtu4hqTyywGcCRODDy902C/nPX4PeGz31DA=,2026-09-30 00:49:47.000 +0200,false,Wieslaw,"","",wieslaw@todo.com,false,true,2026-04-15 23:42:09.000 +0200
+3,pbkdf2_sha256$1000000$sLd0QgnRuDHs4lZ2w5yMH5$kOeoTbvv8ZGj5eNvh38u8rMMLSHSpOPL7AgG2pVAC5M=,2026-10-05 22:15:12.000 +0200,false,Sebastian,"","",sebastian@todo.com,false,true,2025-11-09 18:03:13.000 +0100
+1,pbkdf2_sha256$1000000$DugjUAand7I4pmV3RYPUQi$wGl8gmvvE3B+LUVaTqm9OnRnYS6vREX7g7KIusoxI8k=,2026-10-05 22:32:16.000 +0200,true,admin,"","",admin@todo.com,true,true,2025-11-09 18:01:18.000 +0100
+108,pbkdf2_sha256$1000000$OGu4EmOUQJmFAHPZ9Nu4Aa$YP6g1jMz44tgTP78ORkuL+JxpT/fD3cQjL2BJRORaCI=,2026-05-14 22:51:49.000 +0200,false,Adrian,"","",adrian@todo.com,false,true,2026-04-21 22:21:57.000 +0200
