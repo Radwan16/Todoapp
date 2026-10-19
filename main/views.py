@@ -12,7 +12,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions,status
 from .mypermission import IsSuperUser
 from django.utils.dateparse import parse_date
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
+from .forms import DepartmentForm, ManagerForm
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
@@ -96,7 +98,7 @@ def listuserquest(request):
             if ticket_id:
                 Ticket.objects.select_related("departament").filter(id__in=ticket_ids).update(made=True)
 
-        return redirect('listuserquest')
+        return redirect('main:listuserquest')
     
     tickets = Ticket.objects.select_related("assigned_to").filter(made=False, assigned_to=request.user)
     quests = Quest.objects.select_related("assigned_to").filter(made=False, assigned_to=request.user) 
@@ -160,7 +162,7 @@ def createquest(request):
             assigned_to_id=assigned_to_id,
             departament=u 
         )
-        return redirect('createquest')
+        return redirect('main:createquest')
     u = Department.objects.prefetch_related("users").get(users=request.user)
     usersid = u.users.all() if u else []
     return render(request, 'createquest.html', {'usersid': usersid})
@@ -196,7 +198,7 @@ def createProject(request):
         new=Project.objects.create(projectName = projectName)
         if managers:
             new.managers.set(managers.id())
-        return redirect('createProject')
+        return redirect('main:createProject')
     
     return render(request, 'createProjects.html',{"managers":managers})
 
@@ -220,3 +222,27 @@ def questdetails(request, tag):
     if not CheckDep.exists():
         return HttpResponse("<b><center>Ups. Wrong department or no quests found! <a href='/home/'>Return</a></center></b>")
     return render(request, "detailquest.html",{"quests":quests})
+
+@api_view(['GET','POST'])
+@permission_classes([permissions.IsAdminUser])
+def dep_create(request):
+    if request.method =="POST" and request.user.is_staff:
+        form = DepartmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("main:depcreate")
+    else:
+        form = DepartmentForm()
+    return render(request, "dep_create.html",{"form":form})
+
+@api_view(['GET','POST'])
+@permission_classes([permissions.IsAdminUser])
+def manager_create(request):
+    if request.method=="POST" and request.user.is_staff:
+        form = ManagerForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            return redirect('main:managercreate')
+    else:
+        form = ManagerForm()
+    return render(request, "manager_create.html",{"form":form})

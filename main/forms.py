@@ -11,6 +11,7 @@ class DepartmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args,**kwargs)
+        self.fields['users'].queryset = User.objects.filter(departments__isnull=True)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_action = 'dep_create'
