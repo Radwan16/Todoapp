@@ -21,30 +21,36 @@
         <a href="{% url 'home' %}" class="nav-link px-2 text-secondary">Home</a>
     </li>
     <li>
-        <a href="{% url 'listuserquest' %}" class="nav-link px-2 text-secondary">Tasks List</a>
+        <a href="{% url 'main:listuserquest' %}" class="nav-link px-2 text-secondary">Tasks List</a>
     </li>
     <li>
-        <a href="{% url 'not_completed' %}" class="nav-link px-2 text-secondary">Not Completed</a>
+        <a href="{% url 'main:not_completed' %}" class="nav-link px-2 text-secondary">Not Completed</a>
     </li>
     <li>
-        <a href="{% url 'ticketsdb' %}" class="nav-link px-2 text-secondary">Tickets</a>
+        <a href="{% url 'tickets:ticketsdb' %}" class="nav-link px-2 text-secondary">Tickets</a>
     </li>
 
 
     {% if user.is_superuser %}
         <li>
-            <a href="{% url 'createquest' %}" class="nav-link px-2 text-secondary">Create Quest</a>
+            <a href="{% url 'main:createquest' %}" class="nav-link px-2 text-secondary">Create Quest</a>
         </li>
         <li>
-            <a href="{% url 'history' %}" class="nav-link px-2 text-secondary">History</a>
+            <a href="{% url 'main:history' %}" class="nav-link px-2 text-secondary">History</a>
         </li>
         <li>
-            <a href="{% url 'createuser' %}" class="nav-link px-2 text-secondary">User</a>
+            <a href="{% url 'main:createuser' %}" class="nav-link px-2 text-secondary">User</a>
         </li>
         <!-- <li>
             
         </li> -->
     {% endif %}
+
+    {%if user.is_staff%}
+        <li>
+            <a href="{% url 'main:managercreate' %}" class="nav-link px-2 text-secondary" style="text-align: center;">Admin</a>
+        </li>
+    {%endif%}
 
     <li>
         <form method="post" action="{% url 'logout' %}">
