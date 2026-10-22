@@ -13,7 +13,7 @@
                     <i>ID:{{ticket.id}}</i></br>
                     <b>Title: {{ticket.title}}</b></br>
                     <p div class="description">Description: {{ticket.description}}</p>
-                    <p>Orders: {{ticket.who}}</p>
+                    <p>Orders: {{ticket.who.username}} <strong>({{ticket.who.departments.first.name}})</strong></p>
                      <p>Made: {{ticket.made}}</p>
                     {%if user.is_superuser and ticket.assigned_to == None%}
                             <select name="assigned_to">
