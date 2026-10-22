@@ -104,7 +104,6 @@ You have two primary options for running the `todoapp`:
     ```
     *After creating a superuser, you must create a `Department`, assign the superuser to it, and then you can begin creating other users and assigning them to the same department. When creating a user with the “staff” status, an “admin” department is automatically created, and the user is added to it. Users in the “admin” department can create managers and departments and assign them; this can be done in the “Admin” tab.*
 
-Translated with DeepL.com (free version)
 
 5.  **Access the application:**
     The application will be running and accessible at `http://localhost:8000/login`. Log in with your superuser credentials.
