@@ -89,6 +89,7 @@ You have two primary options for running the `todoapp`:
     This command will build the Docker image for the web application and start the `web` and `db` services.
     ```sh
     docker-compose up
+
     ```
 
 3.  **Apply database migrations:**
