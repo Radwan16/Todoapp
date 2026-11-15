@@ -59,8 +59,9 @@ class UserCreatesForm(forms.ModelForm):
         self.helper.form_action = 'createuser'
         self.helper.layout = Layout(Fieldset("Dane użytkownika", "username","password","is_superuser"))
         self.helper.add_input(Submit('submit','Create'))
-    def create(self, commit=False):
-        user = User.objects.create(
+
+    def save(self, commit=True):
+        user = User.objects.create_user(
             username = self.cleaned_data['username'],
             password = self.cleaned_data['password']
         )
