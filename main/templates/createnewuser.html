@@ -1,18 +1,9 @@
 {%extends 'userbase.html'%}
+{%load crispy_forms_tags%}
     {%block title%}Create user {%endblock%}
 {%block body%}
     {{block.super}}
-    {{dep.name}}
     <form method="post" action="">
-        {% csrf_token %}
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br/>
-        
-        <br/><label for="password">Password: </label>
-        <input type="text" id="password" name="password">
-
-        <br/><input type="checkbox" id="is_superuser" name="is_superuser">
-        <label for="is_superuser">Superuser</label><br/>
-        <input type="submit" name="Create" value="Create" class="btn btn-success">
+        {% crispy form %}
     </form>
 {%endblock%}

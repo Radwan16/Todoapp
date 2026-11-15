@@ -25,7 +25,6 @@ class ManagerForm(forms.ModelForm):
     class Meta():
         model = User
         fields = ['username','password']
-        labels = {"username":"Nazwa użytkownika", "password":"Hasło"}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args,**kwargs)
@@ -42,6 +41,31 @@ class ManagerForm(forms.ModelForm):
         )
         user.is_superuser=True
         user.is_staff=False
+        if commit:
+            user.save()
+        return user
+
+class UserCreatesForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
+    is_superuser = forms.BooleanField(required=False, label = "Manager")
+    class Meta():
+        model = User
+        fields = ["username","password","is_superuser"]
+
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'createuser'
+        self.helper.layout = Layout(Fieldset("Dane użytkownika", "username","password","is_superuser"))
+        self.helper.add_input(Submit('submit','Create'))
+    def create(self, commit=False):
+        user = User.objects.create(
+            username = self.cleaned_data['username'],
+            password = self.cleaned_data['password']
+        )
+        user.is_superuser = self.cleaned_data['is_superuser']
+
         if commit:
             user.save()
         return user

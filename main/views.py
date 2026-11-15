@@ -14,7 +14,7 @@ from .mypermission import IsSuperUser
 from django.utils.dateparse import parse_date
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
-from .forms import DepartmentForm, ManagerForm
+from .forms import DepartmentForm, ManagerForm, UserCreatesForm
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
@@ -108,22 +108,20 @@ def listuserquest(request):
 @permission_classes([IsSuperUser])
 def createuser(request):
     dep = request.user.departments.get() 
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        is_superuser = bool(request.POST.get('is_superuser')) =='on'
-
-        new_user = User.objects.create(
-            username = username,
-            is_superuser = is_superuser
-        )
-        new_user.set_password(password)
-        new_user.save()
-        try:
-            dep.users.add(new_user)
-        except:
-            pass
-    return render(request, "createnewuser.html")
+    if request.method == 'POST' and request.user.is_superuser:
+        form = UserCreatesForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            if dep:
+                try:
+                    dep.users.add(new_user)
+                    
+                except Exception as e:
+                    print(f"Error adding to a department: {e}")
+        return redirect('main:createuser')
+    else:
+        form =UserCreatesForm()
+    return render(request, 'createnewuser.html',{'form':form})
 
 @api_view(['GET','POST'])
 @permission_classes([IsSuperUser])
